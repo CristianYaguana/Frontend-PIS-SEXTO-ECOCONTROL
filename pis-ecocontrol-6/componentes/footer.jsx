@@ -59,7 +59,7 @@ padding: 1rem;
 display: flex;
 justify-content: center;
 align-items: center;
-height: 100px; /* Adjust as needed */
+height: 50px; /* Adjust as needed */
 }
 .wrapper ul {
 display: flex;
@@ -88,7 +88,7 @@ text-align: center;
             <label htmlFor="active" className="menu-btn"><i className="fa-solid fa-bars"></i></label>
             
             <div className="wrapper">
-            <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={300} alt="logo" className="mb-4" />
+            <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={150} alt="logo" className="mb-4" />
                 <ul>
                     <li><a href="#">Home</a></li>
                     <li><a href="#">About</a></li>
@@ -96,7 +96,7 @@ text-align: center;
                     <li><a href="#">Gallery</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
-            <img src="https://siaaf.unl.edu.ec/static/img/logo.png" width={250} alt="logo" className="mb-4" />
+            <img src="https://siaaf.unl.edu.ec/static/img/logo.png" width={125} alt="logo" className="mb-4" />
             </div>
             <p className="center-text">&copy; 2024 EcoControl. Todos los derechos reservados.</p>
             <div className="content"></div>

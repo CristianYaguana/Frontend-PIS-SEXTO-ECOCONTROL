@@ -3,49 +3,129 @@
 import { borrarSesion } from "@/hooks/SessionUtilClient";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { FaHome, FaChartBar, FaCalendarCheck, FaUsers, FaSignal, FaSignOutAlt } from "react-icons/fa"; // Importa los íconos de react-icons
 
 export default function Sidebar() {
-
     const salir = () => {
         Cookies.remove("token");
         borrarSesion();
-    }
+    };
 
     return (
-        <div className="d-flex flex-column vh-100 bg-primary p-3" style={{ width: '250px', color: '#fff' }}>
-            <ul className="nav nav-pills flex-column mb-auto">
-                <li className="nav-item mb-3">
-                    <Link className="nav-link text-white d-flex align-items-center justify-content-start" aria-current="page" href="/principal">
-                        <FaHome className="mr-2" /> Principal
-                    </Link>
-                </li>
-                <li className="nav-item mb-3">
-                    <Link className="nav-link text-white d-flex align-items-center justify-content-start" aria-current="page" href="/reportes">
-                        <FaChartBar className="mr-2" /> Reportes
-                    </Link>
-                </li>
-                <li className="nav-item mb-3">
-                    <Link className="nav-link text-white d-flex align-items-center justify-content-start" aria-current="page" href="/eventos">
-                        <FaCalendarCheck className="mr-2" /> Eventos
-                    </Link>
-                </li>
-                <li className="nav-item mb-3">
-                    <Link className="nav-link text-white d-flex align-items-center justify-content-start" aria-current="page" href="/usuarios">
-                        <FaUsers className="mr-2" /> Usuarios
-                    </Link>
-                </li>
-                <li className="nav-item mb-3">
-                    <Link className="nav-link text-white d-flex align-items-center justify-content-start" aria-current="page" href="/sensores">
-                        <FaSignal className="mr-2" /> Sensores
-                    </Link>
-                </li>
-            </ul>
-            <div className="mt-auto d-flex align-items-center">
-                <Link className="nav-link text-white d-flex align-items-center justify-content-start" aria-current="page" href="/login" onClick={salir}>
-                    <FaSignOutAlt className="mr-2" /> Cerrar sesión
-                </Link>
-            </div>
+        <div>
+            <style jsx>{`
+            *,
+::before,
+::after {
+    box-sizing: border-box;
+}
+body {
+    background: white;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.unstyled a {
+    text-decoration: none;
+}
+.list-inline {
+    overflow: hidden;
+}
+.list-inline li {
+    float: left;
+}
+.header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 17.5em;
+    background: #0d60ef;
+}
+.logo {
+    text-transform: lowercase;
+    font-family: "Oswald", sans-serif;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+.logo a {
+    display: block;
+    padding: 1em 0;
+    color: #dfdbd9;
+    text-decoration: none;
+    transition: 0.15s linear color;
+}
+.logo a:hover {
+    color: #fff;
+}
+.logo a:hover span {
+    color: #007bff; /* Azul */
+}
+.logo span {
+    font-weight: 700;
+    transition: 0.15s linear color;
+}
+.main-nav ul {
+    border-top: solid 1px #ffffff;
+}
+.main-nav li {
+    border-bottom: solid 1px #3c3735;
+}
+.main-nav a {
+    padding: 1.1em 0;
+    color: #dfdbd9;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+}
+.list-hover-slide li {
+    position: relative;
+    overflow: hidden;
+}
+.list-hover-slide a {
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: 0.35s ease color;
+}
+.list-hover-slide a:before {
+    content: "";
+    display: block;
+    z-index: -1;
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-right: solid 5px #007bff; /* Azul */
+    background: #3c3735;
+    transition: 0.35s ease left;
+}
+.list-hover-slide a.is-current::before,
+.list-hover-slide a:hover::before {
+    left: 0;
+}
+
+            `}</style>
+            <header className="header" role="banner">
+                <h1 className="logo">
+                    <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={300} alt="logo" className="mb-4" />
+                </h1>
+                <div className="nav-wrap">
+                    <nav className="main-nav" role="navigation">
+                        <ul className="unstyled list-hover-slide">
+                            <li><a href="#">Cats Food</a></li>
+                            <li><a href="#">Vitamin</a></li>
+                            <li><a href="#">Grooming</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
         </div>
     );
 }
