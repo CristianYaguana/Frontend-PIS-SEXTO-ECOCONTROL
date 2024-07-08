@@ -11,121 +11,117 @@ export default function Sidebar() {
     };
 
     return (
-        <div>
+        <nav>
+            <input type="checkbox" id="check" />
+            <label htmlFor="check" className="checkbtn">
+                <i className="fas fa-bars"></i>
+            </label>
+            <div className="logo-and-links">
+                <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={150} alt="logo" className="logo" />
+                <ul>
+                    <li><Link href="/" legacyBehavior><a className="active">Principal</a></Link></li>
+                    <li><Link href="/about" legacyBehavior><a>Reportes</a></Link></li>
+                    <li><Link href="/services" legacyBehavior><a>Usuarios</a></Link></li>
+                    <li><Link href="/contact" legacyBehavior><a>Sensores</a></Link></li>
+                    <li><a href="#" onClick={salir}>SALIR</a></li>
+                </ul>
+            </div>
             <style jsx>{`
-            *,
-::before,
-::after {
-    box-sizing: border-box;
-}
-body {
-    background: white;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-.unstyled {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.unstyled a {
-    text-decoration: none;
-}
-.list-inline {
-    overflow: hidden;
-}
-.list-inline li {
-    float: left;
-}
-.header {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 17.5em;
-    background: #0d60ef;
-}
-.logo {
-    text-transform: lowercase;
-    font-family: "Oswald", sans-serif;
-    text-align: center;
-    padding: 0;
-    margin: 0;
-}
-.logo a {
-    display: block;
-    padding: 1em 0;
-    color: #dfdbd9;
-    text-decoration: none;
-    transition: 0.15s linear color;
-}
-.logo a:hover {
-    color: #fff;
-}
-.logo a:hover span {
-    color: #007bff; /* Azul */
-}
-.logo span {
-    font-weight: 700;
-    transition: 0.15s linear color;
-}
-.main-nav ul {
-    border-top: solid 1px #ffffff;
-}
-.main-nav li {
-    border-bottom: solid 1px #3c3735;
-}
-.main-nav a {
-    padding: 1.1em 0;
-    color: #dfdbd9;
-    font-family: "Poppins", sans-serif;
-    text-align: center;
-}
-.list-hover-slide li {
-    position: relative;
-    overflow: hidden;
-}
-.list-hover-slide a {
-    display: block;
-    position: relative;
-    z-index: 1;
-    transition: 0.35s ease color;
-}
-.list-hover-slide a:before {
-    content: "";
-    display: block;
-    z-index: -1;
-    position: absolute;
-    left: -100%;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    border-right: solid 5px #007bff; /* Azul */
-    background: #3c3735;
-    transition: 0.35s ease left;
-}
-.list-hover-slide a.is-current::before,
-.list-hover-slide a:hover::before {
-    left: 0;
-}
-
+                * {
+                    padding: 0;
+                    margin: 0;
+                    text-decoration: none;
+                    list-style: none;
+                    box-sizing: border-box;
+                }
+                body {
+                    font-family: "Montserrat", sans-serif;
+                }
+                nav {
+                    background: rgba(37, 94, 142, 1);
+                    
+                    width: 100%;
+                    height: 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 0 40px;
+                }
+                .logo-and-links {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                }
+                .logo {
+                    margin-right: 20px;
+                }
+                nav ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    width: 100%;
+                }
+                nav ul li {
+                    margin: 0 10px;
+                }
+                nav ul li a {
+                    color: white;
+                    font-size: 17px;
+                    padding: 7px 13px;
+                    border-radius: 3px;
+                    text-transform: uppercase;
+                }
+                a.active, a:hover {
+                    background: #1b9bff;
+                    transition: .5s;
+                }
+                .checkbtn {
+                    font-size: 30px;
+                    color: white;
+                    cursor: pointer;
+                    display: none;
+                }
+                #check {
+                    display: none;
+                }
+                @media (max-width: 952px) {
+                    nav ul li a {
+                        font-size: 16px;
+                    }
+                }
+                @media (max-width: 858px) {
+                    .checkbtn {
+                        display: block;
+                    }
+                    nav ul {
+                        position: fixed;
+                        width: 100%;
+                        height: 100vh;
+                        background: #2c3e50;
+                        top: 0;
+                        left: -100%;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all .5s;
+                    }
+                    nav ul li {
+                        margin: 50px 0;
+                    }
+                    nav ul li a {
+                        font-size: 20px;
+                    }
+                    a:hover, a.active {
+                        background: none;
+                        color: #0082e6;
+                    }
+                    #check:checked ~ ul {
+                        left: 0;
+                    }
+                }
             `}</style>
-            <header className="header" role="banner">
-                <h1 className="logo">
-                    <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={300} alt="logo" className="mb-4" />
-                </h1>
-                <div className="nav-wrap">
-                    <nav className="main-nav" role="navigation">
-                        <ul className="unstyled list-hover-slide">
-                            <li><a href="#">Cats Food</a></li>
-                            <li><a href="#">Vitamin</a></li>
-                            <li><a href="#">Grooming</a></li>
-                            <li><a href="#">Contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </header>
-        </div>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        </nav>
     );
 }
+

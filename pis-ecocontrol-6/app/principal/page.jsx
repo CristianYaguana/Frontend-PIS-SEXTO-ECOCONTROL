@@ -16,14 +16,16 @@ export default function Principal() {
     return (
         <div className="row">
             <div className="container-fluid p-1" >
-                <Menu />
+            <Menu />
                 <div className="d-flex flex-column align-items-center">
                     <div className="content-fluid" >
                     </div>
                 </div>
                 <br />
-                <Footer />
+                
             </div>
+            <Footer />
         </div>
+        
     );
 }
