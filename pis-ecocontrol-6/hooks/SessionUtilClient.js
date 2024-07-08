@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
 export const getId = () => {
     return window.sessionStorage.getItem("user");
 }
 
-export const getExternal = () => {
+export const getE = () => {
     return window.sessionStorage.getItem("external");
+}
+
+export const getR = () => {
+    return window.sessionStorage.getItem("rol");
 }
 
 export const getToken = () => {
     return window.sessionStorage.getItem("token");
-}
-
-export const getRol = () => {
-    return window.sessionStorage.getItem("rol");
 }
 
 export const borrarSesion = () => {
