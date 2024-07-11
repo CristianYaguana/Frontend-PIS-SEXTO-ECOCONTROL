@@ -21,7 +21,7 @@ export default function Sidebar() {
                 <ul>
                     <li><Link href="/" legacyBehavior><a className="active">Principal</a></Link></li>
                     <li><Link href="/about" legacyBehavior><a>Reportes</a></Link></li>
-                    <li><Link href="/services" legacyBehavior><a>Usuarios</a></Link></li>
+                    <li><Link href="/usuarios" legacyBehavior><a>Usuarios</a></Link></li>
                     <li><Link href="/contact" legacyBehavior><a>Sensores</a></Link></li>
                     <li><a href="#" onClick={salir}>SALIR</a></li>
                 </ul>

@@ -1,4 +1,4 @@
-let URL = 'http://localhost:3006/api/';
+let URL = 'http://localhost:3007/api/';
 
 //devolver la url
 export function url_api() {
@@ -21,6 +21,7 @@ export async function guardar(recurso, data, key = "", rol) {
             'Accept': 'application/json',
             "Content-Type": "application/json",
         };
+
     }
 
     const response = await (fetch(URL + recurso, {
@@ -28,8 +29,9 @@ export async function guardar(recurso, data, key = "", rol) {
         headers: headers,
         body: JSON.stringify(data)
     }));
-
+    console.log(response);
     return await response.json();
+    
 }
 
 //metodo para conectarse al backend y guardar datos de un sensor
@@ -139,45 +141,10 @@ export async function obtenerData(recurso, key = "", rol) {
     return response;
 }
 
-//metodo para conectarse con el backend y obtener los datos de los sensores
-export async function busquedaDatoRecolectado(recurso, key = "", rol) {
-    let headers = {};
-    headers = {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-        "token-api": key,
-        'rol-user': rol
-    };
 
-    const response = await (await fetch(URL + recurso, {
-        method: "GET",
-        headers: headers,
-        cache: 'no-store'
-    })).json();
-
-    // console.log("respuesta odcs: " + response)
-    return response;
-}
 
 //metodo para conectarse con el backend y obtener los sensores
-export async function busquedaSensores(recurso, key = "", rol) {
-    let headers = {};
-    headers = {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-        "token-api": key,
-        'rol-user': rol
-    };
 
-    const response = await (await fetch(URL + recurso, {
-        method: "GET",
-        headers: headers,
-        cache: 'no-store'
-    })).json();
-
-    // console.log("respuesta odcs: " + response)
-    return response;
-}
 
 //cambiar estado documentos
 export async function cambiarEstado(recurso, data, key = "", rol) {
@@ -199,25 +166,7 @@ export async function cambiarEstado(recurso, data, key = "", rol) {
     return response;
 }
 
-//metodo para conectarse con el backend y obtener el pronostico
-export async function obtenerPronostico(recurso, key = "", rol) {
-    let headers = {};
-    headers = {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-        "token-api": key,
-        'rol-user': rol
-    };
 
-    const response = await (await fetch(URL + recurso, {
-        method: "GET",
-        headers: headers,
-        cache: 'no-store'
-    })).json();
-
-    // console.log("respuesta odcs: " + response)
-    return response;
-}
 
 
 
