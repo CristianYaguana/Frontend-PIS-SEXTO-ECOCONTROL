@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from '@/componentes/menu';
 import Footer from '@/componentes/footer';
 import mensajes from "@/componentes/Mensajes";
-import { busquedaSensores, cambiarEstado, obtenerP } from "@/hooks/Conexion";
+import { busquedaPersonas, cambiarEstado, obtenerP } from "@/hooks/Conexion";
 import { borrarSesion, getR, getToken } from "@/hooks/SessionUtilClient";
 import { useState } from "react";
 import Cookies from "js-cookie";
@@ -62,6 +62,22 @@ export default function Page() {
         } else {
             dir = "admin/personas";
         }
+        busquedaPersonas(dir, key, rol).then((info) => {
+            if (info.code === 200) {
+                setPersonas(info.datos);
+            } else if (info.code !== 200 && (info.tag === "token expirado o no valido" || info.tag === "token no valido" || info.tag === "no existe token")) {
+                mensajes(info.tag, "Error", "error");
+                Cookies.remove("token");
+                borrarSesion();
+                router.push("/login")
+            } else if (info.code !== 200 && info.tag === "Acceso no autorizado") {
+                router.push("/principal")
+                mensajes(info.tag, "Informacion", "error");
+            } else {
+                mensajes("No se pudo listar los datos", "Error", "error");
+            }
+        });
+
     }
 
 
@@ -96,7 +112,7 @@ export default function Page() {
             <div className="container-fluid">
                 <div className="input-group mb-3" style={{ justifyContent: 'center' }}>
                     <select className="form-control" id="filtroBusqueda" style={{ width: '50px', backgroundColor: '#F2F6F5', color: '#333', border: "1px solid #000000", marginRight: '10px' }} aria-describedby="button-addon2">
-                        <option value="">Selecionar</option>
+                        <option value="">Lista</option>
                         <option value="nombre">Nombre</option>
                     </select>
                     <input type="text" className="form-control" placeholder="Ingrese dato de búsqueda" onChange={handleValorBusqueda} value={valorBusqueda} />
@@ -115,55 +131,53 @@ export default function Page() {
                                 </Link>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
             <div className="table-responsive">
-                <table className="table table-bordered table-striped text-center">
+                <table className="table table-bordered table-striped text-center" style={{ borderColor: 'black' }}>
                     <thead className="table-dark">
                         <tr>
-                            <th>Nro</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Teléfono</th>
-                            <th>Correo</th>
-                            <th>Estado</th>
-                            <th>Rol</th>
-                            <th>Acciones</th>
+                            <th style={{ border: '1px solid black' }}>Nro</th>
+                            <th style={{ border: '1px solid black' }}>Nombres</th>
+                            <th style={{ border: '1px solid black' }}>Apellidos</th>
+                            <th style={{ border: '1px solid black' }}>Teléfono</th>
+                            <th style={{ border: '1px solid black' }}>Correo</th>
+                            <th style={{ border: '1px solid black' }}>Estado</th>
+                            <th style={{ border: '1px solid black' }}>Rol</th>
+                            <th style={{ border: '1px solid black', width: '250px' }}>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {personas.length > 0 ? (
                             personas.map((dato, index) => (
                                 <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{dato.nombres}</td>
-                                    <td>{dato.apellidos}</td>
-                                    <td>{dato.telefono}</td>
-                                    <td>{dato.cuenta.correo}</td>
-                                    <td>{dato.cuenta?.estado === true ? 'Activo': 'Inactivo' }</td>
-                                    <td>{dato.rol.nombre}</td>
-                                    <td>
-                                        <Link href="/personas/modificar/[external]" as={`usuarios/modificar/${dato.external_id}`} className="btn btn-warning font-weight-bold mb-2 me-2">Modificar</Link>
-                                        {dato.rol.nombre === "Administador" && (
-                                            <>
-                                                {dato.cuenta.estado ? (
-                                                   <button type="button" onClick={() => handleEstado(dato.id, "false")} className="btn btn-danger font-weight-bold mb-2 me-2">Dar de baja</button>
-
-                                                ) : (
-                                                    
-                                                    <button type="button" onClick={() => handleEstado(dato.id, "true")} className="btn btn-success font-weight-bold mb-2 me-2">Activar</button>
-                                                    
-                                                )}
-                                            </>
-                                        )}
+                                    <td style={{ border: '1px solid black' }}>{index + 1}</td>
+                                    <td style={{ border: '1px solid black' }}>{dato.nombres}</td>
+                                    <td style={{ border: '1px solid black' }}>{dato.apellidos}</td>
+                                    <td style={{ border: '1px solid black' }}>{dato.telefono}</td>
+                                    <td style={{ border: '1px solid black' }}>{dato.cuenta.correo}</td>
+                                    <td style={{ border: '1px solid black' }}>{dato.cuenta?.estado === true ? 'Activo': 'Inactivo' }</td>
+                                    <td style={{ border: '1px solid black' }}>{dato.rol.nombre}</td>
+                                    <td style={{ border: '1px solid black' }}>
+                                        <div className="d-flex justify-content-center">
+                                            <Link href="/personas/modificar/[external]" as={`usuarios/modificar/${dato.external_id}`} className="btn btn-warning btn-sm font-weight-bold me-2" style={{ padding: '0.25rem 0.5rem' }}>Modificar</Link>
+                                            {dato.rol.nombre === "Administador" && (
+                                                <>
+                                                    {dato.cuenta.estado ? (
+                                                       <button type="button" onClick={() => handleEstado(dato.id, "false")} className="btn btn-danger btn-sm font-weight-bold me-2" style={{ padding: '0.25rem 0.5rem' }}>Dar de baja</button>
+                                                    ) : (
+                                                        <button type="button" onClick={() => handleEstado(dato.id, "true")} className="btn btn-success btn-sm font-weight-bold me-2" style={{ padding: '0.25rem 0.5rem' }}>Activar</button>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="8">No se dispone de información</td>
+                                <td colSpan="8" style={{ border: '1px solid black' }}>No se dispone de información</td>
                             </tr>
                         )}
                     </tbody>
@@ -171,7 +185,6 @@ export default function Page() {
             </div>
             <br />
             <Footer />
-
         </div>
     );
 }

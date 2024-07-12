@@ -75,6 +75,14 @@ export default function Page() {
       if (info.code === 200) {
         mensajes("usuario guardado correctamente", "Informacion", "success")
         router.push("/usuarios");
+      } else if (info.code !== 200 && (info.tag === "token expirado o no valido" || info.tag === "token no valido" || info.tag === "no existe token")) {
+        mensajes(info.tag, "Error", "error");
+        Cookies.remove("token");
+        borrarSesion();
+        router.push("/login")
+      } else if (info.code !== 200 && info.tag === "Acceso no autorizado") {
+        router.push("/principal")
+        mensajes(info.tag, "Informacion", "error");
      
       } else {
         mensajes("Usuario no se pudo guardar", "Error", "error")

@@ -1,11 +1,43 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form';
+import { estaSesion } from '@/hooks/SessionUtil';
+import { inicio_sesion } from '@/hooks/Autenticacion';
+import mensajes from '@/componentes/Mensajes';
+import Cookies from 'js-cookie';
+
 
 export default function Login() {
     const router = useRouter();
+    //validaciones
+    const validationShema = Yup.object().shape({
+        correo: Yup.string().required('Ingrese un correo electronico').email('Se requiere correo valido'),
+        clave: Yup.string().required('ingrese su contraseña')
+    });
+
+    const formOptions = { resolver: yupResolver(validationShema) };
+    const { register, handleSubmit, formState } = useForm(formOptions);
+    const { errors } = formState;
+
+    const sendData = (data) => {
+        var data = { "correo": data.correo, "clave": data.clave };
+
+        inicio_sesion(data).then((info) => {
+            if (!estaSesion()) {
+                mensajes("Error en inicio de sesion", info.tag, "error")
+            } else {
+                //console.log(info);
+                mensajes("Has Ingresado al Sistema", "Bienvenido Usuario", "success");
+                Cookies.set("token", true);
+                router.push("/principal");
+            }
+        })
+    };
+
 
     return (
         <>
@@ -181,18 +213,24 @@ h2 {
                     <div className="container">
                         <div className="row align-items-center justify-content-center">
                             <div className="col-md-7">
-                            <img src="https://i.ibb.co/mvf6tYV/logo-pis-azul.png" width={600} alt="logo" className="logo" />
+                                <img src="https://i.ibb.co/mvf6tYV/logo-pis-azul.png" width={600} alt="logo" className="logo" />
                                 <p className="mb-4">El monitoreo constante de CO2, temperatura y humedad en los espacios de la UNL no solo asegura un entorno óptimo, sino que también promueve un ambiente seguro y productivo para todos.</p>
-                                <form action="#" method="post">
+                                <form onSubmit={handleSubmit(sendData)} style={{ width: '23rem' }}>
                                     <div className="form-group first">
                                         <label htmlFor="username">Correo</label>
-                                        <input type="text" className="form-control" placeholder="sucorreo@gmail.com" id="username" />
+                                        <input type='email' {...register('correo')} name="correo" id="correo" className={`form-control form-control-lg ${errors.correo ? 'is-invalid' : ''}`} placeholder="correo@unl.edu.ec" />
+                                        <label className="form-label" htmlFor="form2Example18">Correo Electrónico</label>
+                                        <div className='alert alert-danger invalid-feedback'>{errors.correo?.message}</div>
+
                                     </div>
                                     <div className="form-group last mb-3">
                                         <label htmlFor="password">Contraseña</label>
-                                        <input type="password" className="form-control" placeholder="Escriba su contraseña" id="password" />
+                                        <input type="password" {...register('clave')} name="clave" id="clave" className={`form-control form-control-lg ${errors.clave ? 'is-invalid' : ''}`} placeholder="ingrese su contraseña" />
+                                       
+                                        <div className='alert alert-danger invalid-feedback'>{errors.clave?.message}</div>
+
                                     </div>
-                                    
+
                                     <input type="submit" value="Log In" className="btn btn-block btn-primary" />
                                 </form>
                             </div>
@@ -200,7 +238,7 @@ h2 {
                     </div>
                 </div>
             </div>
-            
+
         </>
     );
 }

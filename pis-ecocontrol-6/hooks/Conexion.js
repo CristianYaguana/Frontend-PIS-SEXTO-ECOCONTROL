@@ -1,4 +1,4 @@
-let URL = 'http://localhost:3007/api/';
+let URL = 'http://localhost:3008/api/';
 
 //devolver la url
 export function url_api() {
@@ -165,6 +165,25 @@ export async function cambiarEstado(recurso, data, key = "", rol) {
 
     return response;
 }
+export async function busquedaPersonas(recurso, key = "", rol) {
+    let headers = {};
+    headers = {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        "token-api": key,
+        'rol-user': rol
+    };
+
+    const response = await (await fetch(URL + recurso, {
+        method: "GET",
+        headers: headers,
+        cache: 'no-store'
+    })).json();
+
+    // console.log("respuesta odcs: " + response)
+    return response;
+}
+
 
 
 
