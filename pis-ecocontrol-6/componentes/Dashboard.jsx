@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Line } from 'react-chartjs-2';
@@ -15,6 +15,9 @@ import {
 } from 'chart.js';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 ChartJS.register(
   CategoryScale,
@@ -26,55 +29,130 @@ ChartJS.register(
   Legend
 );
 
-const sampleData = [
-  { date: '2024-07-01', name: 'Sample 1', value: 20 },
-  { date: '2024-07-02', name: 'Sample 2', value: 30 },
-  // Add more data as needed
-];
-
 const Dashboard = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [filteredData, setFilteredData] = useState(sampleData);
+  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData2, setFilteredData2] = useState([]);  
 
-  const handleFilter = () => {
-    const filtered = sampleData.filter(item => {
-      const date = new Date(item.date);
-      return (!startDate || date >= startDate) && (!endDate || date <= endDate);
-    });
-    setFilteredData(filtered);
+  useEffect(() => {
+    fetchFilteredData();
+  }, []);
+
+  const fetchFilteredData = async () => {
+    let url = 'http://localhost:3007/api/admin/registro';
+  
+    const query = new URLSearchParams();
+    if (startDate) query.append('fechaInicio', startDate.toISOString().split('T')[0]);
+    if (endDate) query.append('fechaFin', endDate.toISOString().split('T')[0]);
+  
+    if (query.toString()) {
+      url += `?${query.toString()}`;
+    }
+  
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log('Data received:', data);
+      setFilteredData(data.datos);
+      setFilteredData2(data.datos2);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setFilteredData([]);
+    }
   };
 
-  const handleClear = () => {
+  const DataA = async () => {
+    let url = 'http://localhost:3007/api/admin/registro';
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setFilteredData(data.datos);
+      setFilteredData2(data.datos2);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setFilteredData([]);
+    }
+  };
+
+  const handleFilter = () => {
+    fetchFilteredData();
+  };
+
+  const handleClear = async () => {
     setStartDate(null);
     setEndDate(null);
-    setFilteredData(sampleData);
+    DataA();
   };
 
   const chartData = {
-    labels: filteredData.map(item => item.date),
+    labels: filteredData.map(item => item.fecha_hora),
     datasets: [
       {
-        label: 'Sample Data',
-        data: filteredData.map(item => item.value),
-        fill: true,
-        backgroundColor: 'rgba(75,192,192,0.2)',
-        borderColor: 'rgba(75,192,192,1)',
+        label: "Temperatura",
+        data: filteredData.map((d) => d.temperatura),
+        borderColor: "rgba(75,192,192,1)",
+        fill: false,
+      },
+      {
+        label: "Humedad",
+        data: filteredData.map((d) => d.humedad),
+        borderColor: "rgba(153,102,255,1)",
+        fill: false,
+      },
+      {
+        label: "CO2",
+        data: filteredData.map((d) => d.co2),
+        borderColor: "rgba(255,159,64,1)",
+        fill: false,
       },
     ],
   };
 
-  const contaminationLevel = 58;
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    const tableColumn = ["Fecha", "Temperatura", "Humedad", "CO2"];
+    const tableRows = [];
+
+    filteredData.forEach(data => {
+      const dataRow = [
+        data.fecha_hora,
+        data.temperatura,
+        data.humedad,
+        data.co2
+      ];
+      tableRows.push(dataRow);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    doc.text("Reporte de Sensores", 14, 15);
+    doc.save("reporte.pdf");
+  };
+
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    const workbook = {
+      Sheets: { data: worksheet },
+      SheetNames: ["data"]
+    };
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Datos");
+    XLSX.writeFile(workbook, "reporte.xlsx");
+  };
 
   return (
     <div className="bg-white">
       <div className="p-4 mx-auto">
         <div className="flex flex-col md:flex-row md:items-start gap-4">
-          {/* Sección del gráfico */}
           <div className="md:flex-auto h-96 bg-white rounded-3xl shadow-md p-4">
             <Line data={chartData} options={{ maintainAspectRatio: false }} />
           </div>
-          {/* Sección de búsqueda */}
           <div className="flex-none md:w-72 h-96 bg-white rounded-3xl shadow-md p-4 mb-8">
             <h2 className="mb-4 text-center text-black">Filtro</h2>
             <div className="mb-2">
@@ -83,7 +161,7 @@ const Dashboard = () => {
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 dateFormat="yyyy-MM-dd"
-                className="w-full px-3 py-2 rounded-2xl border border-gray-300 focus:outline-none focus:border-blue-500"
+                className="w-full text-black px-3 py-2 rounded-2xl border border-gray-300 focus:outline-none focus:border-blue-500"
               />
             </div>
             <div className="mb-4">
@@ -92,41 +170,56 @@ const Dashboard = () => {
                 selected={endDate}
                 onChange={(date) => setEndDate(date)}
                 dateFormat="yyyy-MM-dd"
-                className="w-full px-3 py-2 rounded-2xl border border-gray-300 focus:outline-none focus:border-blue-500"
+                className="w-full text-black px-3 py-2 rounded-2xl border border-gray-300 focus:outline-none focus:border-blue-500"
               />
             </div>
-            <div className="flex justify-center p-8">
+            <div className="flex justify-center p-2">
               <button className="mr-2 px-8 py-2 bg-blue-500 text-white rounded-full cursor-pointer" onClick={handleFilter}>Aplicar</button>
               <button className="px-8 py-2 bg-white text-gray-800 border border-gray-300 rounded-full cursor-pointer" onClick={handleClear}>Limpiar</button>
             </div>
+            <div className="flex justify-center mt-4">
+              <button className="mr-2 px-8 py-2 bg-red-500 text-white rounded-full cursor-pointer" onClick={exportToPDF}>PDF</button>
+              <button className="px-8 py-2 bg-green-500 text-white rounded-full cursor-pointer" onClick={exportToExcel}>Excel</button>
+            </div>
           </div>
         </div>
-
-        {/* Sección de temperatura, humedad, co2 y recomendaciones */}
-        <div className="flex flex-col md:flex-row md:items-start gap-4 p-4">
+               {/* Sección de temperatura, humedad, co2 y recomendaciones */}
+               <div className="flex flex-col md:flex-row md:items-start gap-4 p-4">
           <div className="md:flex-auto h-96">
             <div className="grid grid-cols-3 gap-4">
               <div className='text-black bg-white rounded-3xl shadow-md text-center items-center p-4' >
-                <div className="text-7xl font-bold text-green-400">20</div>
+                <div className="text-7xl font-bold text-green-400">
+                  { filteredData2.temperatura }
+                </div>
                 <div className="text-3xl font-bold text-green-400">Temperatura °C</div>
-                <div className="text-xl text-green-400">Normal</div>
+                <div className="text-xl text-green-400">{
+                  filteredData2.estadoTemperatura
+                  }</div>
               </div>
               <div className='text-black bg-white rounded-3xl shadow-md text-center items-center p-4' >
-                <div className="text-7xl font-bold text-red-400">55</div>
+                <div className="text-7xl font-bold text-red-400">
+                  { filteredData2.humedad }
+                </div>
                 <div className="text-3xl font-bold text-red-400">Humedad %</div>
-                <div className="text-xl text-red-400">Alto</div>
+                <div className="text-xl text-red-400">
+                  {filteredData2.estadoHumedad}
+                </div>
               </div>
               <div className='text-black bg-white rounded-3xl shadow-md text-center items-center p-4'>
-                <div className="text-7xl font-bold text-yellow-400">523</div>
+                <div className="text-7xl font-bold text-yellow-400">
+                  { filteredData2.co2 }
+                </div>
                 <div className="text-3xl font-bold text-yellow-400">CO2 ppm</div>
-                <div className="text-xl text-yellow-400">Bajo</div>
+                <div className="text-xl text-yellow-400">
+                  { filteredData2.estadoCO2 }
+                </div>
               </div>
               <div className='col-start-1 col-end-4 text-black bg-white rounded-3xl shadow-md p-4'>
                 <h2 className="text-xl mb-2 text-blue-950">Recomendaciones:</h2>
                 <ul className="list-disc list-inside text-left">
-                  <li className='text-gray-500'>Se recomienda llevar ropa abrigada</li>
-                  <li className='text-gray-500'>Se recomienda llevar una botella de agua</li>
-                  <li className='text-gray-500'>Se recomienda abrir las botellas</li>
+                {filteredData2.recomendaciones && filteredData2.recomendaciones.map((recommendation, index) => (
+      <li key={index} className="text-gray-500">{recommendation}</li>
+    ))}
                 </ul>
               </div>
             </div>
@@ -136,7 +229,7 @@ const Dashboard = () => {
             <div className="grid grid-rows-4 gap-2 h-full">
               <div className="items-center justify-center">
                 <CircularProgressbar
-                  value={contaminationLevel}
+                  value={filteredData2.contaminationLevel}
                   strokeWidth={11}
                   styles={buildStyles({
                     pathColor: '#ffe461',
@@ -145,7 +238,7 @@ const Dashboard = () => {
                 />
               </div>
               <div className="row-span-1 text-yellow-400 text-7xl flex items-center justify-center">
-                {contaminationLevel}
+                {filteredData2.contaminationLevel}
               </div>
               <div className="row-span-1 text-yellow-400 text-2xl flex items-center justify-center">
                 Preocupación
