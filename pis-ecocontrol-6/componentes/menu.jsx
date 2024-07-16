@@ -19,9 +19,10 @@ export default function Sidebar() {
             <div className="logo-and-links">
                 <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={150} alt="logo" className="logo" />
                 <ul>
-                    <li><Link href="/" legacyBehavior><a className="active">Principal</a></Link></li>
+                    <li><Link href="/principal" legacyBehavior><a className="active">Principal</a></Link></li>
                     <li><Link href="/about" legacyBehavior><a>Reportes</a></Link></li>
                     <li><Link href="/services" legacyBehavior><a>Usuarios</a></Link></li>
+                    <li><Link href="/principal/tabla" legacyBehavior><a>Registro</a></Link></li>
                     <li><Link href="/contact" legacyBehavior><a>Sensores</a></Link></li>
                     <li><a href="#" onClick={salir}>SALIR</a></li>
                 </ul>
