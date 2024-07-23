@@ -150,13 +150,13 @@ const Dashboard = () => {
 const getColorByState = (state) => {
   switch (state) {
     case 'Normal':
-      return 'text-green-400';
+      return 'text-yellow-400';
     case 'Alto':
       return 'text-red-400';
     case 'Bajo':
-      return 'text-yellow-400';
+      return 'text-green-400';
     default:
-      return 'text-yellow-400';
+      return 'text-red-400';
   }
 };
 
