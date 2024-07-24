@@ -9,6 +9,7 @@ import mensajes from '@/componentes/Mensajes';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Dashboard from '@/componentes/Dashboard';
+import SimpleTable from '@/componentes/Table';
 
 export default function Principal() {
     const router = useRouter();
@@ -19,7 +20,7 @@ export default function Principal() {
 
             <Menu />
 
-            <Dashboard />
+            <SimpleTable />
             <Footer />
         </>
 

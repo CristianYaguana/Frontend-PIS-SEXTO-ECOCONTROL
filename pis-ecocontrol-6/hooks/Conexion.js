@@ -33,6 +33,25 @@ export async function guardar(recurso, data, key = "", rol) {
     return await response.json();
     
 }
+//buscar personas
+export async function busquedaPersonas(recurso, key = "", rol) {
+    let headers = {};
+    headers = {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        "token-api": key,
+        'rol-user': rol
+    };
+
+    const response = await (await fetch(URL + recurso, {
+        method: "GET",
+        headers: headers,
+        cache: 'no-store'
+    })).json();
+
+    // console.log("respuesta odcs: " + response)
+    return response;
+}
 
 //metodo para conectarse al backend y guardar datos de un sensor
 export async function guardarSensor(recurso, imagen, data, key = "", rol) {
@@ -63,6 +82,24 @@ export async function guardarSensor(recurso, imagen, data, key = "", rol) {
 
 //metodo para conectarse al backend y obtener los usuarios
 export async function obtenerP(recurso, key, rol) {
+
+    let headers = {
+        'Accept': 'application/json',
+        "token-api": key,
+        'rol-user': rol
+    };
+
+    const datos = await (await fetch(URL + recurso, {
+        cache: 'no-store',
+        method: "GET",
+        headers: headers,
+
+    })).json();
+    return datos;
+}
+
+//metodo para conectarse al backend y obtener las motas
+export async function obtenerM(recurso, key, rol) {
 
     let headers = {
         'Accept': 'application/json',

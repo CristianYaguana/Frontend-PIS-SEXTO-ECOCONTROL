@@ -18,6 +18,7 @@ export const getToken = () => {
 
 export const borrarSesion = () => {
     window.sessionStorage.clear();
+    
 }
 
 export const estaSesion = () => {
