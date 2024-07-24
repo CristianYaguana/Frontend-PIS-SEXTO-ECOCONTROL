@@ -107,7 +107,7 @@ export default function Page() {
     };
 
     return (
-        <div className="d-flex flex-column min-vh-100">
+        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: 'white' }}>
             <Menu />
             <div className="container my-4 flex-grow-1">
                 <h1 className="text-center my-3" style={{ margin: '20px 0' }}>Lista de Usuarios</h1>

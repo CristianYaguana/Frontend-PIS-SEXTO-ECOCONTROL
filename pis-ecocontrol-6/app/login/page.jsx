@@ -79,7 +79,7 @@ export default function Login() {
                                 <form onSubmit={handleSubmit(sendData)} className="flex-grow">
                                     <div className="mb-4">
                                         <label className="block text-muted-foreground mb-2" htmlFor="correo" style={{ color: 'black' }}>Correo</label>
-                                        <input className="w-full p-2 border border-input rounded" type="text" id="correo" {...register('correo')} />
+                                        <input className="w-full p-2 border border-input rounded" type="text" id="correo" style={{ color: 'black' }} {...register('correo')} />
                                         {errors.correo && <p className="text-red-600">{errors.correo.message}</p>}
                                     </div>
                                     <div className="mb-4">
