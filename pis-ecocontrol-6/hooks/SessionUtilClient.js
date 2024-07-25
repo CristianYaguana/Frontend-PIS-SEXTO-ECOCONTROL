@@ -1,28 +1,43 @@
 "use client";
 
 export const getId = () => {
-    return window.sessionStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+        return sessionStorage.getItem("user");
+    }
+    return null;
 }
 
 export const getE = () => {
-    return window.sessionStorage.getItem("external");
+    if (typeof window !== 'undefined') {
+        return sessionStorage.getItem("external");
+    }
+    return null;
 }
 
 export const getR = () => {
-    return window.sessionStorage.getItem("rol");
+    if (typeof window !== 'undefined') {
+        return sessionStorage.getItem("rol");
+    }
+    return null;
 }
 
 export const getToken = () => {
-    return window.sessionStorage.getItem("token");
+    if (typeof window !== 'undefined') {
+        return sessionStorage.getItem("token");
+    }
+    return null;
 }
 
 export const borrarSesion = () => {
-    window.sessionStorage.clear();
-    
+    if (typeof window !== 'undefined') {
+        sessionStorage.clear();
+    }
 }
 
 export const estaSesion = () => {
-    var token = window.sessionStorage.getItem("token");
-    return (token && (token !== 'undefined' && token !== null && token !== 'null'));
-
-};
+    if (typeof window !== 'undefined') {
+        var token = sessionStorage.getItem('token');
+        return (token && (token !== 'undefined' && token !== null && token !== 'null'));
+    }
+    return false;
+}
