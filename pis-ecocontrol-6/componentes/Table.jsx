@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from "react";
+import { url_api } from "../hooks/Conexion";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
@@ -14,7 +15,8 @@ function SimpleTable() {
     const tableRef = useRef();
 
     useEffect(() => {
-        fetch('http://localhost:3007/api/admin/registro')
+        // fetch('http://localhost:3007/api/admin/registro')
+        fetch(`${url_api()}admin/registro`)
             .then(response => response.json())
             .then(data => setDatos(data.datos))
             .catch(error => console.error('Error fetching data', error))
@@ -61,7 +63,8 @@ function SimpleTable() {
     };
 
     const handleBuscar = () => {
-        fetch(`http://localhost:3007/api/admin/registro?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
+        // fetch(`http://localhost:3007/api/admin/registro?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
+        fetch(`${url_api()}admin/registro?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
             .then(response => response.json())
             .then(data => {
                 setDatos(data.datos);
@@ -72,7 +75,8 @@ function SimpleTable() {
     };
 
     const handleCancelar = () => {
-        fetch('http://localhost:3007/api/admin/registro')
+        // fetch('http://localhost:3007/api/admin/registro')
+        fetch(`${url_api()}admin/registro`)
             .then(response => response.json())
             .then(data => {
                 setDatos(data.datos);

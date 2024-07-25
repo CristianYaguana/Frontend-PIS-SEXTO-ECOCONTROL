@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Line } from 'react-chartjs-2';
+import { url_api } from "../hooks/Conexion";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -40,7 +41,9 @@ const Dashboard = () => {
     }, []);
 
     const fetchFilteredData = async () => {
-        let url = 'http://localhost:3007/api/admin/registro';
+
+        // let url = `http://localhost:3007/api/admin/registro`;
+        let url = `${url_api()}admin/registro`;
 
         const query = new URLSearchParams();
         if (startDate) query.append('fechaInicio', startDate.toISOString().split('T')[0]);
@@ -66,7 +69,8 @@ const Dashboard = () => {
     };
 
     const DataA = async () => {
-        let url = 'http://localhost:3007/api/admin/registro';
+        // let url = 'http://localhost:3007/api/admin/registro';
+        let url = `${url_api()}admin/registro`;
         try {
             const response = await fetch(url);
             if (!response.ok) {
