@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import './globals.css';
+import {getR} from "@/hooks/SessionUtilClient";
 
 const Footer = () => {
+    const rol = getR();
     return (
         <>
             <Head>
@@ -24,7 +26,28 @@ const Footer = () => {
                         <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={600} alt="logo" className="mb-4" />
                     </div>
                     <div className="col2">
+                        <ul className="menu">
+                        {rol === "Administrador General" && (
+                        <>
+                            <li><a href="/principal">Principal</a></li>
+                            <li><a href="/principal/tabla">Reportes</a></li>
+                            <li><a href="/usuarios">Usuarios</a></li>
+                            <li><a href="/motas">Sensores</a></li>
+                            </>
+                    )}
+                        </ul>
                         <p>El monitoreo constante de CO2, temperatura y humedad en los espacios de la UNL no solo asegura un entorno óptimo, sino que también promueve un ambiente seguro y productivo para todos.</p>
+                    </div>
+                    <div className="col3">
+                        <p>¿Dudas? Escribenos</p>
+                        <form>
+                            <div className="input-wrap">
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <img src="https://cdn.icon-icons.com/icons2/1826/PNG/512/4202011emailgmaillogomailsocialsocialmedia-115677_115624.png" alt="Correo" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '10px' }} />
+                                    <p style={{ margin: '0' }}>ecocontrol@gmail.com</p>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div className="footer-bottom">
