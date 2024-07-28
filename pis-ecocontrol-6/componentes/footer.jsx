@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import './globals.css';
+import {getR} from "@/hooks/SessionUtilClient";
 
 const Footer = () => {
+    const rol = getR();
     return (
         <>
             <Head>
@@ -25,10 +27,14 @@ const Footer = () => {
                     </div>
                     <div className="col2">
                         <ul className="menu">
+                        {rol === "Administrador General" && (
+                        <>
                             <li><a href="/principal">Principal</a></li>
-                            <li><a href="#">Reportes</a></li>
+                            <li><a href="/principal/tabla">Reportes</a></li>
                             <li><a href="/usuarios">Usuarios</a></li>
-                            <li><a href="#">Sensores</a></li>
+                            <li><a href="/motas">Sensores</a></li>
+                            </>
+                    )}
                         </ul>
                         <p>El monitoreo constante de CO2, temperatura y humedad en los espacios de la UNL no solo asegura un entorno óptimo, sino que también promueve un ambiente seguro y productivo para todos.</p>
                     </div>
