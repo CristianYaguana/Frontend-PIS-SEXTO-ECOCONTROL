@@ -77,7 +77,7 @@ export default function Page() {
   };
 
   return (
-    <div className="row">
+    <div className="row" style={{ backgroundColor: 'white' }}>
       <Menu />
       <center>
         <br />

@@ -113,7 +113,7 @@ export default function Page({ params }) {
     };
 
     return (
-        <div className="wrapper">
+        <div className="wrapper" style={{ backgroundColor: 'white' }}>
             <Menu />
             <center>
                 <div className="d-flex flex-column" style={{ width: 700 }}>

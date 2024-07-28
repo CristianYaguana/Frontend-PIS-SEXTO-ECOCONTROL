@@ -1,10 +1,10 @@
-require('dotenv').config();
 
-// let URL = 'http://localhost:3007/api/';
-let URL = process.env.BACKEND_URL || 'https://backendpis.nicewater-f9af7c67.eastus.azurecontainerapps.io/api/';
+let URL = 'http://localhost:3007/api/';
+// let URL = 'https://backendpis.nicewater-f9af7c67.eastus.azurecontainerapps.io/api/';
 
 //devolver la url
 export function url_api() {
+    console.log(`url ${URL}`);
     return URL;
 }
 
@@ -148,6 +148,29 @@ export async function login(recurso, data, key = "") {
     } else {
         headers = {
             Accept: "application/json",
+            "Content-Type": "application/json",
+        };
+    }
+
+    const response = await fetch(URL + recurso, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(data),
+    });
+
+    return await response.json();
+}
+
+export async function post(recurso, data, key = "") {
+    let headers = {};
+
+    if (key !== "") {
+        headers = {
+
+        };
+    } else {
+        headers = {
+            "Accept": "application/json",
             "Content-Type": "application/json",
         };
     }

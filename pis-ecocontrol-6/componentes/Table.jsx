@@ -4,6 +4,7 @@ import { url_api } from "../hooks/Conexion";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+import Papa from 'papaparse';
 
 function SimpleTable() {
     const [datos, setDatos] = useState([]);
@@ -15,7 +16,6 @@ function SimpleTable() {
     const tableRef = useRef();
 
     useEffect(() => {
-        // fetch('http://localhost:3007/api/admin/registro')
         fetch(`${url_api()}admin/registro`)
             .then(response => response.json())
             .then(data => setDatos(data.datos))
@@ -26,39 +26,95 @@ function SimpleTable() {
         setFiltrarData(datos);
     }, [datos]);
 
-    const descargarPDF = () => {
+    const exportToPDF = () => {
         const doc = new jsPDF();
-
+    
+        const title = "Reporte de Sensores";
+        const titleX = 14;
+        const titleY = 15;
+    
+        let isFirstPage = true;
+    
+        const addTitle = () => {
+            if (isFirstPage) {
+                doc.text(title, titleX, titleY);
+                isFirstPage = false; 
+            }
+        };
+    
         const tableColumn = ["Fecha", "Temperatura", "Humedad", "CO2"];
         const tableRows = [];
-
-        datos.forEach(data => {
-            const dataRow = [
+        filtrarData.forEach(data => {
+            tableRows.push([
                 data.fecha_hora,
                 data.temperatura,
                 data.humedad,
                 data.co2
-            ];
-            tableRows.push(dataRow);
+            ]);
         });
-
-        doc.autoTable(tableColumn, tableRows, { startY: 20 });
-        doc.text("Reporte de Sensores", 14, 15);
+    
+        addTitle();
+    
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: titleY + 10,
+            didDrawPage: () => {
+                addTitle();
+            }
+        });
+    
         doc.save("reporte.pdf");
     };
+    
 
-    const descargarExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(datos);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Datos");
-        XLSX.writeFile(wb, "tabla.xlsx");
+
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(filtrarData);
+    
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Datos");
+    
+        XLSX.writeFile(workbook, "reporte.xlsx");
     };
+    
+
+
+    const exportToCSV = () => {
+        // Define los encabezados y los datos
+        const csvData = [
+            ["Fecha", "Temperatura", "Humedad", "CO2"],
+            ...filtrarData.map(data => [
+                data.fecha_hora,
+                data.temperatura,
+                data.humedad,
+                data.co2
+            ])
+        ];
+
+        // Convierte los datos a CSV usando PapaParse
+        const csv = Papa.unparse(csvData);
+
+        // Crea un blob y genera un enlace para descargar el archivo
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'reporte.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
 
     const handleDownload = (format) => {
         if (format === "pdf") {
-            descargarPDF();
+            exportToPDF();
         } else if (format === "excel") {
-            descargarExcel();
+            exportToExcel();
+        }else if (format === "csv") {
+            exportToCSV();
         }
     };
 
@@ -103,29 +159,29 @@ function SimpleTable() {
     const handleAbrirModal = () => setAbrirModal(true);
     const handleCerrarModal = () => setAbrirModal(false);
     // grafica
-    const dataForChart = {
-        labels: filtrarData.map((d) => d.fecha),
-        datasets: [
-            {
-                label: "Temperatura",
-                data: filtrarData.map((d) => d.temperatura),
-                borderColor: "rgba(75,192,192,1)",
-                fill: false,
-            },
-            {
-                label: "Humedad",
-                data: filtrarData.map((d) => d.humedad),
-                borderColor: "rgba(153,102,255,1)",
-                fill: false,
-            },
-            {
-                label: "CO2",
-                data: filtrarData.map((d) => d.co2),
-                borderColor: "rgba(255,159,64,1)",
-                fill: false,
-            },
-        ],
-    };
+    // const dataForChart = {
+    //     labels: filtrarData.map((d) => d.fecha),
+    //     datasets: [
+    //         {
+    //             label: "Temperatura",
+    //             data: filtrarData.map((d) => d.temperatura),
+    //             borderColor: "rgba(75,192,192,1)",
+    //             fill: false,
+    //         },
+    //         {
+    //             label: "Humedad",
+    //             data: filtrarData.map((d) => d.humedad),
+    //             borderColor: "rgba(153,102,255,1)",
+    //             fill: false,
+    //         },
+    //         {
+    //             label: "CO2",
+    //             data: filtrarData.map((d) => d.co2),
+    //             borderColor: "rgba(255,159,64,1)",
+    //             fill: false,
+    //         },
+    //     ],
+    // };
 
 
     return (
@@ -160,6 +216,7 @@ function SimpleTable() {
                                 <option value="" disabled>DESCARGA</option>
                                 <option value="pdf">PDF</option>
                                 <option value="excel">Excel</option>
+                                <option value="csv">CSV</option>
                             </select>
                         </div>
 
