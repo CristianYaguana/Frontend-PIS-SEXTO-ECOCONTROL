@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef  } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Line } from 'react-chartjs-2';
@@ -256,7 +256,7 @@ const Dashboard = () => {
                 <div className="flex flex-col md:flex-row md:items-start gap-4 p-4">
                     <div className="md:flex-auto h-96">
                         <div className="grid grid-cols-3 gap-4">
-                            <div className={`text-black bg-white rounded-3xl shadow-md text-center items-center p-4 ${getColorByState(filteredData2.estadoTemperatura)}`}>
+                            <div className={`bg-white rounded-3xl shadow-md text-center items-center p-4 ${getColorByState(filteredData2.estadoTemperatura)}`}>
                                 <div className="text-7xl font-bold">
                                     {filteredData2.temperatura}
                                 </div>
@@ -265,7 +265,7 @@ const Dashboard = () => {
                                     {filteredData2.estadoTemperatura}
                                 </div>
                             </div>
-                            <div className={`text-black bg-white rounded-3xl shadow-md text-center items-center p-4 ${getColorByState(filteredData2.estadoHumedad)}`}>
+                            <div className={`bg-white rounded-3xl shadow-md text-center items-center p-4 ${getColorByState(filteredData2.estadoHumedad)}`}>
                                 <div className="text-7xl font-bold">
                                     {filteredData2.humedad}
                                 </div>
@@ -274,7 +274,7 @@ const Dashboard = () => {
                                     {filteredData2.estadoHumedad}
                                 </div>
                             </div>
-                            <div className={`text-black bg-white rounded-3xl shadow-md text-center items-center p-4 ${getColorByState(filteredData2.estadoCO2)}`}>
+                            <div className={`bg-white rounded-3xl shadow-md text-center items-center p-4 ${getColorByState(filteredData2.estadoCO2)}`}>
                                 <div className="text-7xl font-bold">
                                     {filteredData2.co2}
                                 </div>
@@ -283,7 +283,7 @@ const Dashboard = () => {
                                     {filteredData2.estadoCO2}
                                 </div>
                             </div>
-                            <div className='col-start-1 col-end-4 text-black bg-white rounded-3xl shadow-md p-4'>
+                            <div className='col-start-1 col-end-4 bg-white rounded-3xl shadow-md p-4'>
                                 <h2 className="text-xl mb-2 text-blue-950">Recomendaciones:</h2>
                                 <ul className="list-disc list-inside text-left">
                                     {filteredData2.recomendaciones && filteredData2.recomendaciones.map((recommendation, index) => (
@@ -376,6 +376,7 @@ const Dashboard = () => {
                 )}
             </div>
         </div>
+
     );
 };
 
