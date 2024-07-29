@@ -50,7 +50,7 @@ const Dashboard = () => {
 
         // Empezar siempre cono el mensaje del chat
         setCurrentMessage('');
-        const chatbotResponse = { sender: 'bot', text: '¡Hola!, ¿En que puedo ayudarte?' };
+        const chatbotResponse = { sender: 'bot', text: '¡Hola!, ¿En que puedo ayudarte? Puedes escribir \'ayuda\' para ver lo que puedo hacer' };
         setMessages([chatbotResponse]);
 
         setCurrentMessage('');

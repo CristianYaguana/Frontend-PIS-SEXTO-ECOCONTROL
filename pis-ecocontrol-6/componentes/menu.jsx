@@ -17,14 +17,15 @@ export default function Sidebar() {
             <div className="logo-and-links">
                 <img src="https://i.ibb.co/rHQrMSt/logo-pis.png" width={150} alt="logo" className="logo" />
                 <ul>
-                    <li><Link href="/principal" legacyBehavior><a className="active">Principal</a></Link></li>
+                    {/* <li><Link href="/principal" legacyBehavior>Principal</Link></li> */}
+                    <li><Link href="/principal" legacyBehavior>Principal</Link></li>
 
                     {rol === "Administrador General" && (
                         <>
 
-                            <li><Link href="/principal/tabla" legacyBehavior><a>Registro</a></Link></li>
-                            <li><Link href="/usuarios" legacyBehavior><a>Usuarios</a></Link></li>
-                            <li><Link href="/motas" legacyBehavior><a>Sensores</a></Link></li>
+                            <li><Link href="/principal/tabla" legacyBehavior>Registro</Link></li>
+                            <li><Link href="/usuarios" legacyBehavior>Usuarios</Link></li>
+                            <li><Link href="/motas" legacyBehavior>Sensores</Link></li>
 
                         </>
                     )}

@@ -16,9 +16,7 @@ export default function Principal() {
 
     return (
         <>
-
             <Menu />
-
             <Dashboard />
             <Footer />
         </>
