@@ -1,6 +1,6 @@
 
-let URL = 'http://localhost:3007/api/';
-// let URL = 'https://backendpis.nicewater-f9af7c67.eastus.azurecontainerapps.io/api/';
+// let URL = 'http://localhost:3007/api/';
+let URL = 'https://backendpis.nicewater-f9af7c67.eastus.azurecontainerapps.io/api/';
 
 //devolver la url
 export function url_api() {
